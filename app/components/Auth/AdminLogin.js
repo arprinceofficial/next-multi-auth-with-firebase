@@ -21,7 +21,7 @@ export default function AdminLogin() {
             if (role.name === 'Admin') {
                 router.push('/admin');
             } else {
-                router.push('/office');
+                router.push('/user');
             }
         }
     }, [role, loading, router]);

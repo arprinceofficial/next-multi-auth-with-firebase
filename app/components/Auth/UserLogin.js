@@ -7,10 +7,10 @@ import Loader from "@/app/components/Loader/SpinkitBounceLoader";
 import InputError from "@/app/components/Input/Error";
 import InputLabel from "@/app/components/Input/Label";
 
-export default function OfficeLogin() {
+export default function UserLogin() {
     const [loginInput, setLoginInput] = useState('');
     const [password, setPassword] = useState('');
-    const { login, role, loading, officeLoginGoogle, officeLoginFacebook } = useAuth();
+    const { login, role, loading, userLoginGoogle, userLoginFacebook } = useAuth();
     const router = useRouter();
     const [password_open, passwordViewStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ export default function OfficeLogin() {
             if (role.name === 'Admin') {
                 router.push('/admin');
             } else {
-                router.push('/office');
+                router.push('/user');
             }
         }
     }, [role, loading, router]);
@@ -41,7 +41,7 @@ export default function OfficeLogin() {
         try {
             const response = await login(formData);
             if (response) {
-                router.push('/office');
+                router.push('/user');
                 return;
             }
         } catch (error) {
@@ -55,8 +55,8 @@ export default function OfficeLogin() {
         setErrorMsg('');
         setIsLoading(true);
         try {
-            await officeLoginGoogle();
-            router.push('/office');
+            await userLoginGoogle();
+            router.push('/user');
         } catch (error) {
             setErrorMsg(error.response.data.message);
             // console.log(error);
@@ -69,8 +69,8 @@ export default function OfficeLogin() {
         setErrorMsg('');
         setIsLoading(true);
         try {
-            await officeLoginFacebook();
-            router.push('/office');
+            await userLoginFacebook();
+            router.push('/user');
         } catch (error) {
             setErrorMsg(error.response?.data?.message);
             console.log(error);
@@ -93,7 +93,7 @@ export default function OfficeLogin() {
                             <form
                                 onSubmit={handleSubmit}
                                 className="mt-4 rounded-lg p-5 border-[2px] border-gray-200 dark:border-gray-700">
-                                <h2 className="mt-2 text-center text-[22px] font-bold tracking-tight text-gray-900 dark:text-gray-200">Office Login</h2>
+                                <h2 className="mt-2 text-center text-[22px] font-bold tracking-tight text-gray-900 dark:text-gray-200">User Login</h2>
                                 <div className="mt-10">
                                     <InputLabel value="User ID" textSize="text-[14px]" />
                                     <div className="relative mt-1">

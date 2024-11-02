@@ -1,13 +1,13 @@
-import OfficeLogin from '@/app/components/Auth/OfficeLogin';
+import UserLogin from '@/app/components/Auth/UserLogin';
 export const metadata = {
-	title: "Office Login",
-	description: "Office Login description",
+	title: "User Login",
+	description: "User Login description",
 };
 
 export default function Home() {
 	return (
 		<>
-			<OfficeLogin />
+			<UserLogin />
 		</>
 	);
 }

@@ -9,4 +9,4 @@ const Layout = ({ children }) => {
     )
 }
 
-export default withAuth(Layout, ['Office']);
+export default withAuth(Layout, ['User']);

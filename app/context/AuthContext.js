@@ -12,19 +12,19 @@ export const AuthProvider = ({ children }) => {
     const [auth_user, setAuthUser] = useState(null);
 
     useEffect(() => {
-        const token_office = localStorage.getItem('token-office');
+        const token_user = localStorage.getItem('token-user');
         const token_admin = localStorage.getItem('token-admin');
-        if (token_office) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token_office}`;
-            // fetch current office user
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/office/current-user`)
+        if (token_user) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token_user}`;
+            // fetch current user user
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/current-user`)
                 .then(response => {
-                    setRole(response.data.data.role);
+                    setRole(response.data.data.user.role);
                     setAuthUser(response.data.data);
                 })
                 .catch(() => {
                     setRole(null);
-                    localStorage.removeItem('token-office');
+                    localStorage.removeItem('token-user');
                 })
                 .finally(() => {
                     setLoading(false);
@@ -32,9 +32,9 @@ export const AuthProvider = ({ children }) => {
         } else if (token_admin) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token_admin}`;
             // fetch current admin user
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/current-user`)
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/current-user`)
                 .then(response => {
-                    setRole(response.data.data.role);
+                    setRole(response.data.data.user.role);
                     setAuthUser(response.data.data);
                 })
                 .catch(() => {
@@ -50,66 +50,68 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (credentials) => {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/office/login`, credentials);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, credentials);
         // console.log('Login successful:', response.data.data);
-        const { access_token, role } = response.data.data;
-        // console.log('Login successful:', role);
-        localStorage.setItem('token-office', access_token);
+        const { access_token, user } = response.data.data;
+        // console.log('Login successful:', user);
+        localStorage.setItem('token-user', access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-        setRole(role);
+        setRole(user.role);
         setAuthUser(response.data.data);
     };
-    const officeLoginGoogle = async () => {
+    const userLoginGoogle = async () => {
         const result = await signInWithPopup(auth, googleProvider);
         const { user } = result;
         const idToken = await user.getIdToken();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/office/sso-login`, { idToken });
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sso-login`, { idToken });
         console.log('Login successful:', response.data.data);
-        const { access_token, role } = response.data.data;
-        localStorage.setItem('token-office', access_token);
+        const { access_token } = response.data.data;
+        const role  = response.data.data.user.role;
+        localStorage.setItem('token-user', access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         setRole(role);
         setAuthUser(response.data.data);
     };
-    const officeLoginFacebook = async () => {
+    const userLoginFacebook = async () => {
         const result = await signInWithPopup(auth, facebookProvider);
         const { user } = result;
         const idToken = await user.getIdToken();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/office/sso-login`, { idToken });
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sso-login`, { idToken });
         console.log('Login successful:', response.data.data);
-        const { access_token, role } = response.data.data;
-        localStorage.setItem('token-office', access_token);
+        const { access_token } = response.data.data;
+        const role  = response.data.data.user.role;
+        localStorage.setItem('token-user', access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         setRole(role);
         setAuthUser(response.data.data);
     };
     const logout = () => {
-        axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/office/logout`);
-        localStorage.removeItem('token-office');
+        axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/logout`);
+        localStorage.removeItem('token-user');
         delete axios.defaults.headers.common['Authorization'];
         setRole(null);
     };
 
     const adminLogin = async (credentials) => {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/login`, credentials);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, credentials);
         // console.log('Login successful:', response.data.data);
-        const { access_token, role } = response.data.data;
-        // console.log('Login successful:', role);
+        const { access_token, user } = response.data.data;
+        // console.log('Login successful:', user);
         localStorage.setItem('token-admin', access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-        setRole(role);
+        setRole(user.role);
         setAuthUser(response.data.data);
     };
 
     const adminLogout = () => {
-        axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/logout`);
+        axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/logout`);
         localStorage.removeItem('token-admin');
         delete axios.defaults.headers.common['Authorization'];
         setRole(null);
     };
 
     return (
-        <AuthContext.Provider value={{ auth_user, role, loading, login, logout, adminLogin, adminLogout, officeLoginGoogle, officeLoginFacebook }}>
+        <AuthContext.Provider value={{ auth_user, role, loading, login, logout, adminLogin, adminLogout, userLoginGoogle, userLoginFacebook }}>
             {children}
         </AuthContext.Provider>
     );
