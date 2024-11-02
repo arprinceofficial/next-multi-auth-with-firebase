@@ -18,10 +18,12 @@ export default function AdminLogin() {
 
     useEffect(() => {
         if (!loading && role) {
-            if (role.name === 'Admin') {
+            if (role === 2) {
                 router.push('/admin');
-            } else {
+            } else if (role === 3) {
                 router.push('/user');
+            } else {
+                router.push('/');
             }
         }
     }, [role, loading, router]);
@@ -46,7 +48,7 @@ export default function AdminLogin() {
                 return;
             }
         } catch (error) {
-            setErrorMsg(error.response.data.message);
+            setErrorMsg(error.response.data.errors);
         } finally {
             setIsLoading(false);
         }

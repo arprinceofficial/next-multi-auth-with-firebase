@@ -8,10 +8,11 @@ import Loader from "@/app/components/Loader/SpinkitBounceLoader";
 const withAuth = (WrappedComponent, allowedRoles) => {
     const AuthenticatedComponent = (props) => {
         const { role, loading } = useAuth() || {};
+        // console.log('role:', role);
+        // console.log('allowedRoles:', allowedRoles);
         const router = useRouter();
         useEffect(() => {
-            if (!loading && (!role || (allowedRoles && !allowedRoles.includes(role.name)))) {
-                // console.log('role name:', role);
+            if (!loading && !(role === allowedRoles)) {
                 router.push('/');
             }
         }, [role, loading, router]);
@@ -20,7 +21,7 @@ const withAuth = (WrappedComponent, allowedRoles) => {
             return <Loader />;
         }
 
-        if (!role || (allowedRoles && !allowedRoles.includes(role.name))) {
+        if (!role) {
             return null;
         }
 

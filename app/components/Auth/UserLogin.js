@@ -18,10 +18,12 @@ export default function UserLogin() {
 
     useEffect(() => {
         if (!loading && role) {
-            if (role.name === 'Admin') {
+            if (role === 2) {
                 router.push('/admin');
-            } else {
+            } else if (role === 3) {
                 router.push('/user');
+            } else {
+                router.push('/');
             }
         }
     }, [role, loading, router]);
@@ -45,7 +47,7 @@ export default function UserLogin() {
                 return;
             }
         } catch (error) {
-            setErrorMsg(error.response.data.message);
+            setErrorMsg(error.response.data.errors);
         } finally {
             setIsLoading(false);
         }
@@ -58,7 +60,7 @@ export default function UserLogin() {
             await userLoginGoogle();
             router.push('/user');
         } catch (error) {
-            setErrorMsg(error.response.data.message);
+            setErrorMsg(error.response.data.errors);
             // console.log(error);
         } finally {
             setIsLoading(false);
@@ -72,7 +74,7 @@ export default function UserLogin() {
             await userLoginFacebook();
             router.push('/user');
         } catch (error) {
-            setErrorMsg(error.response?.data?.message);
+            setErrorMsg(error.response.data.errors);
             console.log(error);
         } finally {
             setIsLoading(false);
