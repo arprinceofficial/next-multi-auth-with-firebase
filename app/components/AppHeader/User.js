@@ -50,9 +50,9 @@ export default function Admin() {
             }
         };
 
-        if (auth_user) {
-            getProfileImage();
-        }
+        // if (auth_user) {
+        //     getProfileImage();
+        // }
     }, [auth_user]);
 
     return (
@@ -120,7 +120,7 @@ export default function Admin() {
                                         <span className="sr-only">Open user menu</span>
                                         <Image
                                             alt="profileImage"
-                                            src={profileImage ?? DefaultProfileImage}
+                                            src={auth_user.user.profile_image_url ?? DefaultProfileImage}
                                             className="h-8 w-8 rounded-full"
                                             width="32"
                                             height="32"

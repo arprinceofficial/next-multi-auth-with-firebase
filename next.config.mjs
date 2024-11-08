@@ -20,6 +20,11 @@ const nextConfig = {
                 hostname: 'graph.facebook.com',
                 pathname: '**',
             },
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                pathname: '**',
+            },
         ],
     },
     reactStrictMode: false,
